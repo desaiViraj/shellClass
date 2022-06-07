@@ -1,0 +1,1 @@
+echo "https://gitlab.com/foods/demo/stage/data/pros/code.git" | cut -d '/' -f5-8 | awk 'BEGIN { FS="/" } {print $1"\t"$2"\t"$3"\t"$4}'
