@@ -9,39 +9,82 @@ then
 	exit 1
 fi 
 
-FILE1=`cat $1`
-FILE2=`cat $2`
+count=1
+FILE1=$1
+FILE2=$2
+
+while read line1
+        do
+                #echo $line1
+		echo "cloning repo... $line1"
+		#git clone $file1 2>/dev/null
+		if [[ "${?}" -ne 0 ]]
+		then
+        		echo "Could not clone repo.."
+        		exit 1
+		fi
+		
+		old_repo=`echo $FILE1 | cut -d '/' -f 5 | cut -d '.' -f 1`
+		cd $old_repo
+		ls
+		echo "checking... git remote -v"
+		#git remote -v
+
+		
+                line2=`sed -n "$count"p $FILE2`
+                
+
+		echo "Replacing old repo URL to new repo URL"
+		#git remote set-url origin "$FILE2"
+
+		echo "checking... git remote -v"
+		git remote -v
+
+		echo "Pushing code to NEW-URL"
+		git push
+
+		if [[ "${?}" -ne 0 ]]
+		then
+			echo "git push failed, please check manually."
+			exit 1
+		fi
+		
+		echo $line2
+                count=`expr $count + 1`
+done < $FILE1
+
+echo "git push: success.."
 
 #echo "${file1}"
 
-echo "Cloning repo..."
+#echo "Cloning repo..."
 #git clone $file1 2>/dev/null
-if [[ "${?}" -ne 0 ]]
-then
-	echo "Could not clone repo.."
-	exit 1
-fi
+#if [[ "${?}" -ne 0 ]]
+#then
+#	echo "Could not clone repo.."
+#	exit 1
+#fi
 
-old_repo=`echo $file1 | cut -d '/' -f 5 | cut -d '.' -f 1`
-cd $old_repo
-ls
-echo "checking... git remote -v"
-git remote -v
+#old_repo=`echo $file1 | cut -d '/' -f 5 | cut -d '.' -f 1`
+#cd $old_repo
+#ls
+#echo "checking... git remote -v"
+#git remote -v
 
-echo "Replacing old repo URL to new repo URL"
-git remote set-url origin "$file2"
+#echo "Replacing old repo URL to new repo URL"
+#git remote set-url origin "$file2"
 
-echo "checking... git remote -v"
-git remote -v
+#echo "checking... git remote -v"
+#git remote -v
 
-echo "Pushing code to NEW-URL"
-git push
+#echo "Pushing code to NEW-URL"
+#git push
 
-if [[ "${?}" -ne 0 ]]
-then
-	echo "git push failed, please check manually."
-	exit 1
-fi
+#if [[ "${?}" -ne 0 ]]
+#then
+#	echo "git push failed, please check manually."
+#	exit 1
+#fi
 
-echo "git push: success.."
+#echo "git push: success.."
 
